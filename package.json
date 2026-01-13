@@ -1,0 +1,9 @@
+{
+  "name": "mern-memories-app",
+  "version": "1.0.0",
+  "description": "Full-stack MERN memories application",
+  "type": "module",
+  "dependencies": {
+    "mongoose": "^5.9.29"
+  }
+}
