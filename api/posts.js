@@ -37,23 +37,32 @@ export default async function handler(req, res) {
   try {
     await connectDB();
 
-    const { id } = req.query;
+    // Map query params to params for Express controller compatibility
+    const pathParts = req.url.split('/');
+    const lastPart = pathParts[pathParts.length - 1];
+    
+    if (lastPart && lastPart !== 'posts' && lastPart.includes('?') === false) {
+      req.params = { id: lastPart.replace('likePost', '').replace('/', '') };
+    } else {
+      req.params = {};
+    }
 
-    if (req.method === 'GET') {
+    if (req.method === 'GET' && !req.params.id) {
       return await getPosts(req, res);
     } else if (req.method === 'POST') {
       return await createPost(req, res);
-    } else if (req.method === 'PATCH' && id) {
+    } else if (req.method === 'PATCH' && req.params.id) {
       if (req.url.includes('/likePost')) {
         return await likePost(req, res);
       }
       return await updatePost(req, res);
-    } else if (req.method === 'DELETE' && id) {
+    } else if (req.method === 'DELETE' && req.params.id) {
       return await deletePost(req, res);
     }
 
     res.status(405).json({ message: 'Method not allowed' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('API Error:', error);
+    res.status(500).json({ message: error.message, stack: error.stack });
   }
 }
