@@ -8,6 +8,7 @@
       "config": { "distDir": "client/build" }
     }
   ],
+  "outputDirectory": "client/build",
   "routes": [
     { "src": "/api/(.*)", "dest": "/server/index.js" },
     { "src": "/static/(.*)", "dest": "/client/build/static/$1" },
